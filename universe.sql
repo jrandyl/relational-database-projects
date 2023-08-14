@@ -52,7 +52,9 @@ CREATE TABLE public.galaxy (
     name character varying(30) NOT NULL,
     description text,
     age_in_millions_of_years numeric(10,3),
-    distance_from_earth text
+    distance_from_earth text,
+    stars_count_in_billions integer,
+    diameter_in_light_years integer
 );
 
 
@@ -167,7 +169,8 @@ CREATE TABLE public.star (
     name character varying(30) NOT NULL,
     description text,
     age_in_millions_of_years numeric(10,3),
-    distance_from_earth text
+    distance_from_earth text,
+    galaxy_id integer NOT NULL
 );
 
 
@@ -227,9 +230,12 @@ ALTER TABLE ONLY public.star ALTER COLUMN star_id SET DEFAULT nextval('public.st
 -- Data for Name: galaxy; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
-INSERT INTO public.galaxy VALUES (2, 'Andromeda', 'The Andromeda Galaxy is a barred spiral galaxy', 10010.000, '2.537 Million light years away');
-INSERT INTO public.galaxy VALUES (3, 'Whirlpool', 'The Whirlpool galaxy is a spiral galaxy like our own Milky way galaxy', 400.300, '30 Million light years away');
-INSERT INTO public.galaxy VALUES (1, 'Milky way', 'A huge collection of stars, dust and gas', 13610.000, '28,000 Light years away');
+INSERT INTO public.galaxy VALUES (1, 'Milky way', 'A huge collection of stars, dust and gas', 13610.000, '28,000 Light years away', 250, 105700);
+INSERT INTO public.galaxy VALUES (2, 'Andromeda', 'The Andromeda Galaxy is a barred spiral galaxy', 10010.000, '2.537 Million light years away', 1000, 220000);
+INSERT INTO public.galaxy VALUES (3, 'Whirlpool', 'The Whirlpool galaxy is a spiral galaxy like our own Milky way galaxy', 400.300, '30 Million light years away', 100, 60000);
+INSERT INTO public.galaxy VALUES (4, 'Sombrero', 'The Sombrero galaxy is a peculiar galaxy of unclear classification in the constellation borders of Virgo and Corvus', 13250.000, '29.35 Million light years away', 100, 50000);
+INSERT INTO public.galaxy VALUES (5, 'Triangulum', 'The Triangulum galaxy is the third largest galaxy in our local group', 13000.000, '2.723 Million ligh years away', 40, 60000);
+INSERT INTO public.galaxy VALUES (6, 'Messier 81', 'The Messsier 81 is a grand design spiral galaxy about 12 million light years away from the constellation Ursa Major', 13310.000, '11.74 Million light years away', 250, 90000);
 
 
 --
@@ -248,13 +254,15 @@ INSERT INTO public.galaxy VALUES (1, 'Milky way', 'A huge collection of stars, d
 -- Data for Name: star; Type: TABLE DATA; Schema: public; Owner: freecodecamp
 --
 
+INSERT INTO public.star VALUES (1, 'Sun', 'The Sun is a 4.5 billion year old yellow dwarf star', 4603.000, '151.55 million kilometer from the earth', 1);
+INSERT INTO public.star VALUES (2, 'Trappist-1', 'Trappist-1 is a cool red dwarf star noted for its seven known exoplanets', 7605.000, '39.46 light years away from earth', 1);
 
 
 --
 -- Name: galaxy_galaxy_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 3, true);
+SELECT pg_catalog.setval('public.galaxy_galaxy_id_seq', 6, true);
 
 
 --
@@ -275,7 +283,7 @@ SELECT pg_catalog.setval('public.planet_planet_id_seq', 1, false);
 -- Name: star_star_id_seq; Type: SEQUENCE SET; Schema: public; Owner: freecodecamp
 --
 
-SELECT pg_catalog.setval('public.star_star_id_seq', 1, false);
+SELECT pg_catalog.setval('public.star_star_id_seq', 4, true);
 
 
 --
@@ -343,6 +351,13 @@ ALTER TABLE ONLY public.star
 
 
 --
--- PostgreSQL database dump complete
+-- Name: star star_galaxy_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: freecodecamp
 --
 
+ALTER TABLE ONLY public.star
+    ADD CONSTRAINT star_galaxy_id_fkey FOREIGN KEY (galaxy_id) REFERENCES public.galaxy(galaxy_id);
+
+
+--
+-- PostgreSQL database dump complete
+--
